@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import paymentengine.domain.Account;
 import paymentengine.domain.Transaction;
 import paymentengine.domain.TransactionStatus;
-import paymentengine.exception.AccountFoundException;
+import paymentengine.exception.AccountNotFoundException;
 import paymentengine.exception.InactiveAccountException;
 import paymentengine.exception.InsufficientBalanceException;
 import paymentengine.repository.AccountRepository;
@@ -31,10 +31,10 @@ public class TransferService {
         }
 
         Account sourceAccount = accountRepository.findByIdWithPessimisticLock(sourceAccountId)
-                .orElseThrow(() -> new AccountFoundException("Source account not found with ID: " + sourceAccountId));
+                .orElseThrow(() -> new AccountNotFoundException("Source account not found with ID: " + sourceAccountId));
 
         Account destinationAccount = accountRepository.findByIdWithPessimisticLock(destinationAccountId)
-                .orElseThrow(() -> new AccountFoundException("Destination account not found with ID: " + destinationAccountId));
+                .orElseThrow(() -> new AccountNotFoundException("Destination account not found with ID: " + destinationAccountId));
 
 
         if (!sourceAccount.isActive() || !destinationAccount.isActive()) {
