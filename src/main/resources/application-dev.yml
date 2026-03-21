@@ -19,3 +19,8 @@ springdoc:
     path: /swagger-ui.html
     operationsSorter: method
     disable-swagger-default-url: true
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:123456}
