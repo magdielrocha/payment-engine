@@ -7,9 +7,6 @@ import java.math.BigDecimal;
 
 public record TransferRequestDTO(
 
-        @NotNull(message = "Source account ID is required")
-        Long sourceAccountId,
-
         @NotNull(message = "Destination account ID is required")
         Long destinationAccountId,
 

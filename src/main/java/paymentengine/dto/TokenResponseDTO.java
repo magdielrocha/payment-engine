@@ -1,4 +1,3 @@
 package paymentengine.dto;
 
-public class TokenResponse {
-}
+public record TokenResponseDTO(String token){}
