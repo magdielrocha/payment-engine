@@ -4,6 +4,19 @@ spring:
     username: admin
     password: adminpassword
     driver-class-name: org.postgresql.Driver
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 2s
+          max-retries: 3
+
   jpa:
     hibernate:
       ddl-auto: update
