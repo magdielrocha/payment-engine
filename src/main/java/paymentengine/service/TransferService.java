@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import paymentengine.domain.Account;
 import paymentengine.domain.Transaction;
 import paymentengine.domain.TransactionStatus;
+import paymentengine.dto.TransactionEventDTO;
 import paymentengine.exception.AccountNotFoundException;
 import paymentengine.exception.InactiveAccountException;
 import paymentengine.exception.InsufficientBalanceException;
 import paymentengine.repository.AccountRepository;
 import paymentengine.repository.TransactionRepository;
+import paymentengine.producer.TransactionProducer;
 
 import java.math.BigDecimal;
 
@@ -20,6 +22,7 @@ public class TransferService {
 
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
+    private final TransactionProducer producer;
 
 
     @Transactional
@@ -54,11 +57,17 @@ public class TransferService {
         transaction.setAmount(amount);
         transaction.setStatus(TransactionStatus.SUCCESS);
 
+        Transaction savedTransaction = transactionRepository.save(transaction);
 
-        return transactionRepository.save(transaction);
+        TransactionEventDTO event = new TransactionEventDTO(
+                savedTransaction.getId(),
+                sourceAccount.getId(),
+                destinationAccount.getId(),
+                savedTransaction.getAmount()
+        );
 
+        producer.sendTransactionEvent(event);
+
+        return savedTransaction;
     }
-
-
-
 }
